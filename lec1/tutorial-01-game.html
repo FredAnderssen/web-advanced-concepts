@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>The Game</title>
+	<style>
+
+	body{
+		text-align: center;
+	}
+
+	header{
+		font-size: 200%;
+	}
+
+	section{
+		border: 1px solid black;
+		display: none;
+	}
+
+	.current-page{
+		display: block;
+	}
+
+	</style>
+
+	<script>
+
+	let numberOfTurnsLeft = 5
+	let score = 0
+	let scores = []
+
+	document.addEventListener("DOMContentLoaded", function(){
+
+		setupNavigation()
+		setupGame()
+
+	})
+
+	function setupGame(){
+
+		const turnsLeftElement = document.getElementById("turnsLeft")
+		const scoreElement = document.getElementById("score")
+
+		turnsLeftElement.innerText = numberOfTurnsLeft
+		scoreElement.innerText = score
+
+		const guessForm = document.getElementById("guessForm")
+		guessForm.addEventListener("submit", function(event){
+			event.preventDefault()
+
+			numberOfTurnsLeft -= 1
+			turnsLeftElement.innerText = numberOfTurnsLeft
+
+			const diceElements = document.querySelectorAll(
+				"#dices span"
+			)
+
+			let sum = 0
+			for(const diceElement of diceElements){
+				const dice = Math.ceil(Math.random()*6)
+				diceElement.innerText = dice
+				sum += dice
+			}
+
+			const lastDice = parseInt(
+				diceElements[diceElements.length-1].innerText
+			)
+
+			sum -= lastDice
+
+			const guess = parseInt(
+				document.getElementById("guess").value
+			)
+
+			if (guess < sum){
+				score += guess * lastDice
+				scoreElement.innerText = score
+			}
+
+			if(numberOfTurnsLeft == 0){
+
+				const username = document.getElementById("username").value
+
+				scores.push({
+					username: username,
+					score: score
+				})
+
+				scores.sort((a, b) => b.score - a.score)
+
+				//scores.sort(function(a, b) {
+					//return b.score - a.score
+				//})
+
+				const ul = document.getElementById("scores")
+				ul.innerText = ""
+
+				for(const entry of scores){
+					const li = document.createElement("li")
+					li.innerText = entry.username + " " + entry.score
+					ul.appendChild(li)
+				}
+
+				numberOfTurnsLeft = 5
+				score = 0
+
+				turnsLeftElement.innerText = numberOfTurnsLeft
+				scoreElement.innerText = score
+
+			}
+
+		})
+
+	}
+
+	function setupNavigation(){
+		const anchors = document.querySelectorAll("nav a")
+
+		for(const a of anchors){
+			a.addEventListener('click', function(event){
+				event.preventDefault()
+
+				const currentPage = document.querySelector(
+					".current-page"
+				)
+				currentPage.classList.remove("current-page")
+
+				const href = a.getAttribute("href")
+				let pageId
+				switch(href){
+					case "/settings":
+						pageId = "page-settings"
+					break
+					case "/play":
+						pageId = "page-play"
+					break
+					case "/scores":
+						pageId = "page-scores"
+				}
+				document.getElementById(pageId).classList.add("current-page")
+
+			})
+		}
+
+	}
+
+	</script>
+
+</head>
+<body>
+
+	<header>
+		The Game
+	</header>
+
+	<nav>
+		<a href="/settings">Settings</a>
+		<a href="/play">Play</a>
+		<a href="/scores">Scores</a>
+	</nav>
+
+	<main>
+
+		<section id="page-settings" class="current-page">
+			<h1>Settings</h1>
+			Username: <input type="text" id="username">
+		</section>
+
+		<section id="page-play">
+			<h1>Play</h1>
+			<div>Turns left: <span id="turnsLeft"></span></div>
+			<div>Score: <span id="score"></span></div>
+			<div id="dices">
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+
+			<form id="guessForm">
+				<div>Guess: <input type="text" id="guess"></div>
+
+				<button>Guess</button>
+			</form>
+
+		</section>
+
+		<section id="page-scores">
+			<h1>Scores</h1>
+			<ul id="scores">
+
+			</ul>
+		</section>
+
+	</main>
+
+</body>
+</html>

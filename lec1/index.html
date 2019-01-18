@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style media="screen">
+    section {
+      display: none;
+
+    }
+
+    .current-page {
+      //sometihng
+    }
+  </style>
+
+  <script type="text/javascript" src="">
+    document.addEventListener('DOMContentLoaded', function() {
+      const anchors = document.querySelectorAll('nav a')
+      for(a of anchors) {
+        a.addEventListener('click', function(event) {
+          console.preventDefault()
+
+          const currentPage = document.querySelector('.current-page')
+          currentPage.classList.remove('current-page')
+
+          const href = a.getAttribute('href')
+          let pageId
+          //förenkla kodedn mha pageId
+          switch(href) {
+            case '/settings':
+              document.getElementById('page-settings').classList.add('current-page')
+              break
+            case '/play':
+              document.getElementById('page-play').classList.add('current-page')
+              break
+            case '/scores':
+              document.getElementById('page-scores').classList.add('current-page')
+          }
+
+          console.log(a)
+        })
+      }
+    })
+
+  </script>
+</head>
+<body>
+  <header>
+      Game
+  </header>
+  <nav>
+    <a href="/settings">Settings</a>
+    <a href="/play">Play</a>
+    <a href="/scores">Scores</a>
+  </nav>
+  <main>
+    <section id="page-settings" class="current-page">
+      <h1>Settings</h1>
+      Username: <input type="text" id="username">
+
+    </section>
+    <section id="page-play">
+      <h1>Play</h1>
+
+    </section>
+    <section id="page-scores">
+      <h1>Scores</h1>
+      <ul id="scores">
+
+      </ul>
+    </section>
+  </main>
+
+</body>
+</html>

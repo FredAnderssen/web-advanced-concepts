@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Lab 3 - Validating Forms</title>
+	<script>
+	// Write your JavaScript code here.
+	// Display the error messages wherever you think it makes most sense.
+	// Not okey to use Alert()
+	document.addEventListener('DOMContentLoaded', () => {
+		const valEmail = (ele) => ele.value.includes('@')
+		const checkLen = (ele) => ele.value.length >= 8
+		const compareElems = (ele1, ele2) => ele1.value == ele2.value
+		const htmlPresent = (selectIx, str) => { //TODO how to reset before messages?
+			event.preventDefault()
+			let para = document.createElement('p')
+			document.querySelectorAll('div')[selectIx].appendChild(para)
+			para.innerText = str
+		}
+
+		document.addEventListener('submit', (event) => {
+			if(!valEmail(document.getElementById('email'))) {
+				htmlPresent(0, 'Please write correct email')
+			}
+
+			if(!checkLen(document.getElementById('password1'))) {
+				htmlPresent(1, 'Please have atleast 8 chars')
+			}
+
+			if(!compareElems(document.getElementById('password2'),
+			document.getElementById('password1'))) {
+				htmlPresent(2, 'Please write correct password')
+			}
+		})
+	})
+
+	</script>
+</head>
+<body>
+
+	<h1>Create account</h1>
+
+	<form id="createAccountForm">
+
+		<div>Email: <input type="text" name="email" id="email"></div>
+
+		<div>Password: <input type="password" name="password1" id="password1"></div>
+
+		<div>Password (repeat): <input type="password" name="password2" id="password2"></div>
+
+		<input type="submit" value="Create account">
+
+	</form>
+
+</body>
+</html>
